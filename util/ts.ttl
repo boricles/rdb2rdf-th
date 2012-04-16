@@ -1,0 +1,19 @@
+@prefix test: <http://www.w3.org/2006/03/test-description#> .
+@prefix dcterms: <http://purl.org/dc/elements/1.1/> .
+@prefix rdb2rdftest: <http://purl.org/NET/rdb2rdf-test#> .
+@base <http://mappingpedia.org/rdb2rdf/tc/> .
+@prefix doap:<http://usefulinc.com/ns/doap#>.
+
+<ts> a rdb2rdftest:TestSuite;
+	dcterms:title "Test Suite for R2RML and Direct Mapping" ;
+	dcterms:identifier "TS-01" ;
+	rdb2rdftest:workingDirectory "./local" .
+	
+
+<myProject>
+        a doap:Project ;
+        doap:name "morph" ;
+        doap:homepage <https://github.com/boricles/morph>  ;
+        rdb2rdftest:implementsDirectMapping true ;
+        rdb2rdftest:implementsR2RML false .
+         

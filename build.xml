@@ -1,0 +1,124 @@
+<project name="rdb2rdf-th" default="zip">
+<property name="src.dir"     value="src"/>
+<property name="build.dir"   value="build"/>
+<property name="lib.dir.present" value="lib"/>
+<property name="model.dir.present" value="model"/>
+<property name="dist.dir"   value="dist"/>
+<property name="model.dir"   value="${dist.dir}/model"/>
+<property name="util.dir"   value="util"/>
+<property name="javadoc.dir"   value="doc"/>
+<property name="classes.dir" value="${build.dir}/classes"/>
+<property name="jar.dir"     value="${build.dir}/jar"/>
+<property name="lib.dir"			value="${dist.dir}/lib"/>
+<property name="jar.name"	value="${ant.project.name}.jar"/>
+<property name="main-class"  value="org.rdb2rdf.testcase.th.TCScanner"/>
+<property name="version"  value="0.0.1"/>
+
+<description> rdb2rdf-th build file</description>
+
+<path id="classpath">
+	<fileset dir="${lib.dir.present}" includes="*.jar"/>
+</path>
+
+<!-- ================================= 
+      target: zip
+     ================================= -->
+<target name="zip" depends="dist">
+	<zip destfile="${ant.project.name}_bin_${version}.zip" basedir="./${dist.dir}">
+	</zip>
+    <delete dir="${build.dir}"/>
+</target>
+
+<!-- ================================= 
+      target: dist
+     ================================= -->
+<target name="dist" depends="build">
+      <mkdir dir="${dist.dir}"/>
+      <mkdir dir="${lib.dir}"/>
+      <mkdir dir="${model.dir}"/>
+		<copy todir="${lib.dir}">
+		      <fileset dir="${lib.dir.present}">
+		        <include name="**/*.jar"/>
+		      </fileset>
+		</copy>
+		<copy todir="${model.dir}">
+		      <fileset dir="${model.dir.present}">
+		        <include name="**/*.ttl"/>
+		      </fileset>
+		</copy>		
+		<copy todir="${dist.dir}">
+				<fileset dir="${util.dir}"/>				
+				<fileset dir="${jar.dir}"/>
+		</copy>
+</target>
+	
+
+<!-- ================================= 
+      target: default              
+     ================================= -->
+<target name="build" depends="compile" description="description">
+    <jar destfile="${jar.dir}/${jar.name}" basedir="${classes.dir}">
+    	<manifest>
+    		<attribute name="Main-Class" value="${main-class}" />
+    	</manifest>
+    </jar>
+</target>
+
+<!-- ================================= 
+      target: compile
+     ================================= -->
+<target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+</target>
+
+<!-- ================================= 
+      target: copyJars
+     ================================= -->
+<target name="copyJars" if="lib.dir.present">
+		<copy todir="${dist.lib.dir}">
+		      <fileset dir="${lib.dir}">
+		        <include name="**/*.jar"/>
+		      </fileset>
+		</copy>
+</target>
+
+<!-- ================================= 
+      target: clean
+     ================================= -->
+<target name="clean" 
+    description="Destroys all generated files and dirs.">
+	  <delete dir="${build.dir}"/>
+	  <delete dir="${dist.dir}"/>
+	  <delete dir="${javadoc.dir}"/>
+	  <delete>
+		<fileset dir="." includes="**/*.zip"/>
+	  </delete>
+</target>
+
+<!-- ================================= 
+      target: jar
+     ================================= -->
+<target name="jar" depends="compile">
+		<jar jarfile="${build.dir}/${jar.dir}/${jar.name}">
+		</jar>
+</target>
+
+<!-- ================================= 
+      target: javadoc
+     ================================= -->
+<target name="javadoc">
+    <javadoc
+          access="public"
+           destdir="${javadoc.dir}"
+           author="true"
+           version="true"
+           use="true"
+     >
+		<fileset dir="${src.dir}" defaultexcludes="yes">
+            <include name="**/*.java"/>
+		 </fileset>
+    </javadoc>
+</target>	
+	
+</project>

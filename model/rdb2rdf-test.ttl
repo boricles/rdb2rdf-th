@@ -1,0 +1,380 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix : <http://vocab.deri.ie/rdb2rdftc#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdb2rdf-test: <http://purl.org/NET/rdb2rdf-test#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdb2rdftc: <http://vocab.deri.ie/rdb2rdftc#> .
+@prefix test-description: <http://www.w3.org/2006/03/test-description#> .
+@base <http://vocab.deri.ie/rdb2rdftc> .
+
+<http://vocab.deri.ie/rdb2rdftc> rdf:type owl:Ontology ;
+                                 
+                                 dc:modified "2012-01-30"^^xsd:date ;
+                                 
+                                 dc:title "W3C RDB2RDF Test Case vocabulary" ;
+                                 
+                                 dc:description """This vocabulary defines a set of metadata elements for modelling the RDB2RDF test cases.
+""" ;
+                                 
+                                 vann:preferredNamespaceUri "http://purl.org/NET/rdb2rdf-test#" ;
+                                 
+                                 vann:preferredNamespacePrefix "rdb2rdftc" ;
+                                 
+                                 foaf:page <http://vocab.deri.ie/rdb2rdftc.html> ;
+                                 
+                                 dc:creator :BorisVillazonTerrazas ,
+                                            :MichaelHausenblas .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+foaf:homepage rdf:type owl:AnnotationProperty .
+
+
+
+rdb2rdf-test:relatedTestCase rdf:type owl:AnnotationProperty ;
+                             
+                             rdfs:label "relatedTestCase" ;
+                             
+                             rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+foaf:member rdf:type owl:AnnotationProperty .
+
+
+
+rdb2rdf-test:workingDirectory rdf:type owl:AnnotationProperty ;
+                              
+                              rdfs:label "working directory" ;
+                              
+                              rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                              
+                              rdfs:domain test-description:TestSuite .
+
+
+
+rdb2rdf-test:database rdf:type owl:AnnotationProperty ;
+                      
+                      rdfs:label "database" ;
+                      
+                      rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+foaf:mbox rdf:type owl:AnnotationProperty .
+
+
+
+foaf:name rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Datatypes
+#
+#################################################################
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://purl.org/NET/rdb2rdf-test#database
+
+rdb2rdf-test:database rdf:type owl:ObjectProperty ;
+                      
+                      rdfs:label "database" ;
+                      
+                      rdfs:range rdb2rdf-test:DataBase ;
+                      
+                      rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                      
+                      rdfs:domain test-description:TestCase .
+
+
+###  http://purl.org/NET/rdb2rdf-test#relatedTestCase
+
+rdb2rdf-test:relatedTestCase rdf:type owl:ObjectProperty ;
+                             
+                             rdfs:label "relatedTestCase" ;
+                             
+                             rdfs:domain rdb2rdf-test:DataBase ;
+                             
+                             rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                             
+                             rdfs:range test-description:TestCase .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#sqlScriptFile
+
+rdb2rdf-test:sqlScriptFile rdf:type owl:ObjectProperty ;
+                           
+                           rdfs:label "sqlScriptFile" ;
+                           
+                           rdfs:range rdb2rdf-test:DataBase ;
+                           
+                           rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+###  http://vocab.deri.ie/rdb2rdftc#hasTestCase
+
+:hasTestCase rdf:type owl:ObjectProperty ;
+             
+             rdfs:domain :TestSuite ;
+             
+             rdfs:range test-description:TestCase .
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://purl.org/NET/rdb2rdf-test#failMessage
+
+rdb2rdf-test:failMessage rdf:type owl:DatatypeProperty ;
+                         
+                         rdfs:label "fail message"@en ;
+                         
+                         rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                         
+                         rdfs:range xsd:string ;
+                         
+                         rdfs:domain test-description:TestCase .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#hasExpectedOutput
+
+rdb2rdf-test:hasExpectedOutput rdf:type owl:DatatypeProperty ;
+                               
+                               rdfs:label "has expected output"@en ;
+                               
+                               rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                               
+                               rdfs:range xsd:boolean ;
+                               
+                               rdfs:domain test-description:TestCase .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#mappingDocument
+
+rdb2rdf-test:mappingDocument rdf:type owl:DatatypeProperty ;
+                             
+                             rdfs:label "mappingDocument" ;
+                             
+                             rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                             
+                             rdfs:range rdfs:Literal ;
+                             
+                             rdfs:domain test-description:TestCase .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#output
+
+rdb2rdf-test:output rdf:type owl:DatatypeProperty ;
+                    
+                    rdfs:label "output" ;
+                    
+                    rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                    
+                    rdfs:range rdfs:Literal ;
+                    
+                    rdfs:domain test-description:TestCase .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#sqlScriptFile
+
+rdb2rdf-test:sqlScriptFile rdf:type owl:DatatypeProperty ;
+                           
+                           rdfs:label "sqlScriptFile" ;
+                           
+                           rdfs:domain rdb2rdf-test:DataBase ;
+                           
+                           rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                           
+                           rdfs:range rdfs:Literal .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#workingDirectory
+
+rdb2rdf-test:workingDirectory rdf:type owl:DatatypeProperty ;
+                              
+                              rdfs:label "working directory" ;
+                              
+                              rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> ;
+                              
+                              rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/NET/rdb2rdf-test#implementsDirectMapping
+rdb2rdf-test:implementsDirectMapping rdf:type owl:ObjectProperty ;
+                           
+                           rdfs:label "the tool implements direct mapping" ;
+                           
+                           rdfs:range xsd:boolean .
+
+###  http://purl.org/NET/rdb2rdf-test#implementsR2RML
+rdb2rdf-test:implementsR2RML rdf:type owl:ObjectProperty ;
+                           
+                           rdfs:label "the tool implements R2RML" ;
+                           
+                           rdfs:range xsd:boolean .
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://purl.org/NET/rdb2rdf-test#DataBase
+
+rdb2rdf-test:DataBase rdf:type owl:Class ;
+                      
+                      rdfs:label "DataBase" ;
+                      
+                      rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#DirectMapping
+
+rdb2rdf-test:DirectMapping rdf:type owl:Class ;
+                           
+                           rdfs:label "DirectMapping" ;
+                           
+                           rdfs:subClassOf test-description:TestCase ;
+                           
+                           rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+###  http://purl.org/NET/rdb2rdf-test#R2RML
+
+rdb2rdf-test:R2RML rdf:type owl:Class ;
+                   
+                   rdfs:label "R2RML" ;
+                   
+                   rdfs:subClassOf test-description:TestCase ;
+                   
+                   rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
+
+
+###  http://vocab.deri.ie/rdb2rdftc#TestSuite
+
+:TestSuite rdf:type owl:Class .
+
+
+
+###  http://www.w3.org/2006/03/test-description#TestCase
+
+test-description:TestCase rdf:type owl:Class .
+
+
+
+###  http://xmlns.com/foaf/0.1/Organization
+
+foaf:Organization rdf:type owl:Class .
+
+
+
+###  http://xmlns.com/foaf/0.1/Person
+
+foaf:Person rdf:type owl:Class .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://vocab.deri.ie/rdb2rdftc#BorisVillazonTerrazas
+
+:BorisVillazonTerrazas rdf:type owl:NamedIndividual ,
+                                      foaf:Person ;
+                             
+                             foaf:name "Boris Villazon-Terrazas" ;
+                             
+                             foaf:homepage "" ;
+                             
+                             foaf:mbox <mailto:boris.villazon@deri.org> .
+
+
+
+###  http://vocab.deri.ie/rdb2rdftc#LiDRC
+
+:LiDRC rdf:type owl:NamedIndividual ,
+                foaf:Organization ;
+       
+       foaf:name "LiDRC" ;
+       
+       foaf:homepage <http://linkeddata.deri.ie/> ;
+       
+       foaf:member :MichaelHausenblas .
+
+
+
+###  http://vocab.deri.ie/rdb2rdftc#MichaelHausenblas
+
+:MichaelHausenblas rdf:type owl:NamedIndividual ,
+                               foaf:Person ;
+                      
+                      foaf:name "Michael Hausenblas" ;
+                      
+                      foaf:homepage <http://sw-app.org/about.html> ;
+                      
+                      foaf:mbox <mailto:michael.hausenblas@deri.org> .
+
+
+
+###  http://vocab.deri.ie/rdb2rdftc#OEG
+
+:OEG rdf:type owl:NamedIndividual ,
+              foaf:Organization ;
+     
+     foaf:homepage "www.oeg-upm.net" ;
+     
+     foaf:name "OEG" ;
+     
+     foaf:member :BorisVillazonTerrazas .
+
+
+
+
+###  Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net
+
