@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openjena.riot.Lang;
 import org.rdb2rdf.testcase.th.Comparator;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -33,7 +34,11 @@ public class RDB2RDFTC {
 	protected Model model;
 	protected OntModel oModel;
 	
-	protected static Model earlModel = null;
+	protected static Model earlModelDM = null;
+	protected static Model earlModelR2RML = null;
+	
+	protected static String toolName = null;
+	
 	protected static String nsBase = "http://mappingpedia.org/rdb2rdf/";
 	protected static String doapURI = "http://usefulinc.com/ns/doap#";
 	protected static String earlURI = "http://www.w3.org/ns/earl#";
@@ -43,6 +48,9 @@ public class RDB2RDFTC {
 	
 	protected static Resource myTH;
 	protected static Resource myTool;
+	
+	protected static Resource softwareResource;
+	protected static Resource projectResouce;
 	
 	protected static Resource earlPass;
 	protected static Resource earlFail;
@@ -67,8 +75,6 @@ public class RDB2RDFTC {
 		vocabularyFile = vocabulary;
 		loadVocabulary();
 	}
-	
-
 	
 	public void loadVocabulary() {
 		oModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF, null);
@@ -101,7 +107,7 @@ public class RDB2RDFTC {
 		return toolOutputFileName;
 	}
 	
-	protected void createAssertion(boolean passed, String identifier) {
+	protected void createAssertion(Model earlModel, boolean passed, String identifier) {
 		Resource assertion = earlModel.createResource();
 		Resource assertionClass = earlModel.createResource(earlURI + "Assertion");
 		assertion.addProperty(RDF.type, assertionClass);
@@ -168,9 +174,9 @@ public class RDB2RDFTC {
 			String id = rdfNode.toString();
 			
 			if (comparator.modelsAreEquivalent())
-				createAssertion(true,id);
+				createAssertion(earlModelDM,true,id);
 			else
-				createAssertion(false,id);			
+				createAssertion(earlModelDM,false,id);			
 		}
 	}
 
@@ -195,21 +201,40 @@ public class RDB2RDFTC {
 				rdfNode = ind.getPropertyValue(iProperty);
 				defaultOutputFileName = rdfNode.toString();
 				toolOutputFileName = getToolOutputFileName(defaultOutputFileName,toolName);
-				//System.out.println(defaultOutputFileName + "\t" + toolOutputFileName);
+
 				//Compare the content of the two files
+				Comparator comparator = new Comparator(currentDir + defaultOutputFileName, currentDir + toolOutputFileName,Lang.NQUADS);
+				
+				property = dcURI + "identifier";
+				iProperty = oModel.getOntProperty(property);
+				rdfNode = ind.getPropertyValue(iProperty);
+				String id = rdfNode.toString();
+				
+				if (comparator.datasetsAreEquivalent())
+					createAssertion(earlModelR2RML,true,id);
+				else
+					createAssertion(earlModelR2RML,false,id);			
 			}
 			else { //if there is no expected output
+				property = dcURI + "identifier";
+				iProperty = oModel.getOntProperty(property);
+				rdfNode = ind.getPropertyValue(iProperty);
+				String id = rdfNode.toString();
+				String fileName = currentDir+ "mapped" + id.charAt(id.length()-1) +"-" + toolName + ".nq";
 				
+				File f = new File(fileName);
+				if (f.exists())			//if there is a file generated from the tool
+					createAssertion(earlModelR2RML,false,id);
+				else
+					createAssertion(earlModelR2RML,true,id);
 			}
-
-			
-
 		}
 		
 	}
 	
 	
 	protected void processTCs(String toolName,boolean implementsDM, boolean implementsR2RML) throws Exception {
+		this.toolName = toolName;
 		if (implementsDM)
 			processDirectGraph(toolName);
 		if (implementsR2RML)
@@ -245,36 +270,42 @@ public class RDB2RDFTC {
 			}
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println("Error reading the file "+file +", class " + clazz + ", predicate "+ predicate);
+			System.exit(0);
 		}
 					
 		return value;
 	}
 	
-	protected void checkEARLModel(String toolName,boolean implementsDM, boolean implementsR2RML) {
+	protected Model checkEARLModel(Model earlModel, String toolName,boolean implementsDM, boolean implementsR2RML) {
 		if (earlModel==null) {
 			earlModel = ModelFactory.createDefaultModel();
 			
 			earlPass = earlModel.createResource(earlURI + "pass");
 			earlFail = earlModel.createResource(earlURI + "fail");
 
+			softwareResource = earlModel.createResource(earlURI+"Software");
+			projectResouce = earlModel.createResource(doapURI+ "Project");
+			
 			
 			myTool = earlModel.createResource(nsBase+"myProject"+"/"+toolName);
-			myTool.addProperty(RDF.type, doapURI + "Project");
+			myTool.addProperty(RDF.type, projectResouce);
 			
 			Property doapName = earlModel.createProperty(doapURI + "name" );
 			myTool.addProperty(doapName, toolName);
 			
 			Property implDM = earlModel.createProperty(NS + "implementsDirectMapping" );
-			myTool.addProperty(implDM, new Boolean(implementsDM).toString());
-
+			//myTool.addProperty(implDM, new Boolean(implementsDM).toString());			
+			myTool.addLiteral(implDM,earlModel.createTypedLiteral(new Boolean(implementsDM).toString(),XSDDatatype.XSDboolean));
 			Property implR2RML = earlModel.createProperty(NS + "implementsR2RML" );
-			myTool.addProperty(implR2RML, new Boolean(implementsR2RML).toString());
-			
+			//myTool.addProperty(implR2RML, new Boolean(implementsR2RML).toString());
+			myTool.addLiteral(implR2RML,earlModel.createTypedLiteral(new Boolean(implementsR2RML).toString(),XSDDatatype.XSDboolean));
+
 			myTH = earlModel.createResource(nsBase+"myTestHarness");
-			myTH.addProperty(RDF.type, earlURI + "Software");
+			myTH.addProperty(RDF.type, softwareResource);
 			
 		}
+		return earlModel;
 		
 	}
 
@@ -295,7 +326,8 @@ public class RDB2RDFTC {
 	
 			oModel.add(model);
 			
-			checkEARLModel(toolName, implementsDM,  implementsR2RML);
+			earlModelDM = checkEARLModel(earlModelDM,toolName, implementsDM,  implementsR2RML);
+			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, implementsDM,  implementsR2RML);
 			
 			processTCs(toolName,implementsDM,implementsR2RML);
 			
@@ -303,19 +335,26 @@ public class RDB2RDFTC {
 			
 		}
 		catch (Exception ex) {
+			ex.printStackTrace();
 			System.out.println("Error while processing the TS");
 			System.exit(0);
 		}
 		
 	}
 	
-	public static void saveEarlModel() {
+	public static void saveEarlModel () {
+		saveEarlModel(earlModelDM, toolName, "dm");
+		saveEarlModel(earlModelR2RML, toolName, "r2rml");
+	}
+	
+	protected static void saveEarlModel(Model earlModel, String tool, String implement) {
 		try {
-			  FileOutputStream fout=new FileOutputStream("earl.ttl");
+			  FileOutputStream fout=new FileOutputStream("earl-"+ tool +"-" + implement+ ".ttl");
 			  earlModel.write(fout,"TTL");
 		}
 		catch(IOException e) {
 			  System.out.println("Exception caught"+e.getMessage());
+			  System.exit(0);
 		}
 	}
 	
