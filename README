@@ -1,1 +1,4 @@
-rdb2rdf-th
+rdb2rdf-th is a software library that compares the test results from a given (DM or R2RML) implementation against the official test results [1]. The software library generates a report based on earl [2].
+
+[1] http://www.w3.org/2001/sw/rdb2rdf/test-cases 
+[2] http://www.w3.org/2001/03/earl
