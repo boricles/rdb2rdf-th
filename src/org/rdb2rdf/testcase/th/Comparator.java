@@ -45,14 +45,14 @@ public class Comparator {
 	}
 	
 	public Comparator(String sourceFileName, String targetFileName) {
-		this(sourceFileName,targetFileName,Lang.NTRIPLES);
+		this(sourceFileName,targetFileName,Lang.TURTLE);
 	}
 	
 
 	public Comparator(String sourceFileName, String targetFileName, Lang lang) {
 		this.sourceFileName = sourceFileName;
 		this.targetFileName = targetFileName;
-		if ( lang == Lang.NTRIPLES) {		
+		if ( lang == Lang.TURTLE) {		
 			sourceModel = loadModel(sourceFileName,sourceModel);
 			targetModel = loadModel(targetFileName,targetModel);
 		}
@@ -80,7 +80,7 @@ public class Comparator {
 			                                 "File: " + fileName + " not found");
 			}
 	
-			model.read(in, "", "TTL");
+			model.read(in, "", "TURTLE");
 			}
 		catch (Exception ex) {
 			System.out.println("Error loading file " + fileName);

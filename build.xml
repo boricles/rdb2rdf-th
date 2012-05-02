@@ -12,7 +12,7 @@
 <property name="lib.dir"			value="${dist.dir}/lib"/>
 <property name="jar.name"	value="${ant.project.name}.jar"/>
 <property name="main-class"  value="org.rdb2rdf.testcase.th.TCScanner"/>
-<property name="version"  value="0.0.2"/>
+<property name="version"  value="0.0.1"/>
 
 <description> rdb2rdf-th build file</description>
 

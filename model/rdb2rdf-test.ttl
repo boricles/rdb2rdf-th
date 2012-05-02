@@ -136,6 +136,14 @@ rdb2rdf-test:sqlScriptFile rdf:type owl:ObjectProperty ;
                            rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
 
 
+###  http://purl.org/NET/rdb2rdf-test#dbms 
+
+rdb2rdf-test:dbms rdf:type owl:ObjectProperty ;
+                           
+                           rdfs:label "dbms" ;
+                                                      
+                           rdfs:isDefinedBy <http://vocab.deri.ie/rdb2rdftc> .
+
 
 ###  http://vocab.deri.ie/rdb2rdftc#hasTestCase
 

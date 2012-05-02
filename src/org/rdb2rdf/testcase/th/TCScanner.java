@@ -30,6 +30,8 @@ public class TCScanner {
 	
 	protected String toolName;
 	
+	protected String dbms;
+	
 	protected boolean implementsDM = false;
 	
 	protected boolean implementsR2RML = false;
@@ -82,7 +84,7 @@ public class TCScanner {
 	protected void processManifestFile(String dbPath, File manifestFile) {
 		RDB2RDFTC rdb2rdfTC = new RDB2RDFTC(vocabularyPath); 
 		rdb2rdfTC.setManifestFileName(manifestFile.getAbsolutePath());
-		rdb2rdfTC.processDescription(dbPath,toolName,implementsDM,implementsR2RML);
+		rdb2rdfTC.processDescription(dbPath,toolName,dbms,implementsDM,implementsR2RML);
 	}
 	
 	protected void obtainBasicInfo() {
@@ -90,6 +92,8 @@ public class TCScanner {
 		RDB2RDFTC rdb2rdfTS = new RDB2RDFTC(vocabularyPath); 
 		this.tcFolder = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://purl.org/NET/rdb2rdf-test#TestSuite","http://purl.org/NET/rdb2rdf-test#workingDirectory");
 
+		this.dbms = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#dbms");
+		
 		this.toolName = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://usefulinc.com/ns/doap#name");
 
 		this.implementsDM = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#implementsDirectMapping").equalsIgnoreCase("true");
@@ -109,8 +113,6 @@ public class TCScanner {
 
 		dateFormat = new SimpleDateFormat("yyyy");
 		dateString = dateFormat.format(date);
-
-
 
 	}
 	

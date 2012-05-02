@@ -43,6 +43,8 @@ public class RDB2RDFTC {
 	protected static String doapURI = "http://usefulinc.com/ns/doap#";
 	protected static String earlURI = "http://www.w3.org/ns/earl#";
 	protected static String dcURI = "http://purl.org/dc/elements/1.1/";
+	protected static String rdb2rdftestURI = "http://purl.org/NET/rdb2rdf-test#";
+
 	
 	protected static String tcNSBase = "http://www.w3.org/2001/sw/rdb2rdf/test-cases/#";
 	
@@ -51,6 +53,7 @@ public class RDB2RDFTC {
 	
 	protected static Resource softwareResource;
 	protected static Resource projectResouce;
+	protected static Resource dbmsResource;
 	
 	protected static Resource earlPass;
 	protected static Resource earlFail;
@@ -143,6 +146,9 @@ public class RDB2RDFTC {
 		
 		Property earlTest = earlModel.createProperty(earlURI + "test" );
 		assertion.addProperty(earlTest, tc);
+		
+		Property dbmsProp = earlModel.createProperty(rdb2rdftestURI + "dbms");
+		assertion.addProperty(dbmsProp, dbmsResource);
 
 	}
 	
@@ -255,7 +261,7 @@ public class RDB2RDFTC {
 			                                 "File: " + manifestFileName + " not found");
 			}
 	
-			model.read(in, "", "TTL");
+			model.read(in, "", "TURTLE");
 	
 			oModel.add(model);
 
@@ -266,10 +272,15 @@ public class RDB2RDFTC {
 				Individual ind = (Individual) instances.next();
 				Property prop = oModel.getProperty(predicate);
 				RDFNode rdfNode = ind.getPropertyValue(prop);
-				value = rdfNode.asLiteral().getString();
+				
+				if (rdfNode.isLiteral())
+					value = rdfNode.asLiteral().getString();
+				else
+					value = rdfNode.asResource().getURI();
 			}
 		}
 		catch (Exception ex) {
+			ex.printStackTrace();
 			System.out.println("Error reading the file "+file +", class " + clazz + ", predicate "+ predicate);
 			System.exit(0);
 		}
@@ -277,7 +288,7 @@ public class RDB2RDFTC {
 		return value;
 	}
 	
-	protected Model checkEARLModel(Model earlModel, String toolName,boolean implementsDM, boolean implementsR2RML) {
+	protected Model checkEARLModel(Model earlModel, String toolName, String dbms, boolean implementsDM, boolean implementsR2RML) {
 		if (earlModel==null) {
 			earlModel = ModelFactory.createDefaultModel();
 			
@@ -286,8 +297,7 @@ public class RDB2RDFTC {
 
 			softwareResource = earlModel.createResource(earlURI+"Software");
 			projectResouce = earlModel.createResource(doapURI+ "Project");
-			
-			
+									
 			myTool = earlModel.createResource(nsBase+"myProject"+"/"+toolName);
 			myTool.addProperty(RDF.type, projectResouce);
 			
@@ -303,13 +313,15 @@ public class RDB2RDFTC {
 
 			myTH = earlModel.createResource(nsBase+"myTestHarness");
 			myTH.addProperty(RDF.type, softwareResource);
+						
+			dbmsResource = earlModel.createResource(dbms);
 			
 		}
 		return earlModel;
 		
 	}
 
-	public void processDescription(String dbPath, String toolName, boolean implementsDM, boolean implementsR2RML) {
+	public void processDescription(String dbPath, String toolName, String dbms, boolean implementsDM, boolean implementsR2RML) {
 		try {
 			currentDir =  dbPath +"/";
 			// create an empty model	
@@ -326,8 +338,8 @@ public class RDB2RDFTC {
 	
 			oModel.add(model);
 			
-			earlModelDM = checkEARLModel(earlModelDM,toolName, implementsDM,  implementsR2RML);
-			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, implementsDM,  implementsR2RML);
+			earlModelDM = checkEARLModel(earlModelDM,toolName, dbms, implementsDM,  implementsR2RML);
+			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, dbms, implementsDM,  implementsR2RML);
 			
 			processTCs(toolName,implementsDM,implementsR2RML);
 			
