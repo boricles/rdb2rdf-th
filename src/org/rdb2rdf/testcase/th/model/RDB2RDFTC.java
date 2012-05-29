@@ -127,9 +127,9 @@ public class RDB2RDFTC {
 		Property dateP = earlModel.createProperty(dcURI + "date" );
 		
 		Date date = new Date();
-		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		String dateString = dateFormat.format(date);
-		resultResource.addLiteral(dateP,earlModel.createTypedLiteral(dateString,XSDDatatype.XSDdate));
+		resultResource.addLiteral(dateP,earlModel.createTypedLiteral(dateString,XSDDatatype.XSDdateTime));
 		
 		Property outcome = earlModel.createProperty(earlURI + "outcome" );
 		
@@ -152,7 +152,9 @@ public class RDB2RDFTC {
 
 	}
 	
-	protected void processDirectGraph(String toolName) throws Exception {
+	protected void processDirectGraph(String toolName) {
+		String defaultOutputFileName = "",toolOutputFileName = "";
+		try {
 		OntClass dmClass = oModel.getOntClass(NS + directMappingClass);
 		ExtendedIterator instances = dmClass.listInstances();
 		List dgList = new ArrayList();
@@ -160,7 +162,7 @@ public class RDB2RDFTC {
 		if (instances.hasNext()) {
 	
 			Individual ind = (Individual) instances.next();
-			String property = "", defaultOutputFileName = "", toolOutputFileName = "";
+			String property = "";
 			OntProperty iProperty;
 			RDFNode rdfNode; 
 
@@ -184,9 +186,17 @@ public class RDB2RDFTC {
 			else
 				createAssertion(earlModelDM,false,id);			
 		}
+	  }
+	  catch (Exception ex) {
+	    	System.out.println("Error while processing the file " + currentDir + toolOutputFileName);
+	    	//System.exit(0);
+	  }
+		
 	}
 
-	protected void processR2RML(String toolName) throws Exception {
+	protected void processR2RML(String toolName)  {
+		String defaultOutputFileName = "",toolOutputFileName = "";
+		try {
 		OntClass r2rClass = oModel.getOntClass(NS + r2rmlClass);
 		ExtendedIterator instances = r2rClass.listInstances();
 		
@@ -194,7 +204,7 @@ public class RDB2RDFTC {
 		int i = 0;
 		while (instances.hasNext()) {
 			Individual ind = (Individual) instances.next();
-			String property = "", defaultOutputFileName = "", toolOutputFileName = "";
+			String property = "";  
 			OntProperty iProperty;
 			RDFNode rdfNode; 
 			property = NS +"hasExpectedOutput";
@@ -235,6 +245,11 @@ public class RDB2RDFTC {
 					createAssertion(earlModelR2RML,true,id);
 			}
 		}
+	  }
+	  catch (Exception ex) {
+	    	System.out.println("Error while processing the file " + currentDir + toolOutputFileName);
+	    	//System.exit(0);
+	  }
 		
 	}
 	

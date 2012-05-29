@@ -20,8 +20,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.rdb2rdf.testcase.th.model.RDB2RDFTC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class TCScanner {
@@ -44,7 +44,7 @@ public class TCScanner {
 
 	protected static Options options;
 
-    private static final Logger logger = LoggerFactory.getLogger(TCScanner.class);
+    private static final Logger logger = Logger.getLogger(TCScanner.class.getName());
     
     //protected String vocabularyFile = "rdb2rdf-test.ttl";
     protected String vocabularyPath = "model/rdb2rdf-test.ttl";
@@ -179,7 +179,7 @@ public class TCScanner {
 	            cmd = parser.parse(options, args);
 	        } catch (ParseException e) {
 	            System.err.println(e.getMessage());
-	            logger.debug("Exception ",e);
+	            logger.log(Level.FINEST, "Excpetion",e);
 	            System.exit(-1);
 	        }
 			
@@ -189,7 +189,7 @@ public class TCScanner {
 	        }
 	        if (cmd.getArgs().length != 1) {
 	            printHelp();
-	            logger.debug("Wrong number of parameters");
+	            logger.log(Level.FINEST,"Wrong number of parameters");
 	            System.exit(-1);
 	        }
 	        

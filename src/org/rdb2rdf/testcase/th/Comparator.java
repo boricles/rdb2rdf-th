@@ -64,9 +64,9 @@ public class Comparator {
 
 	
 	
-	protected DatasetGraph loadDataSet(String fileName, DatasetGraph datasetGraph) {
-		return RiotLoader.load(fileName, Lang.NQUADS);
-	}
+		protected DatasetGraph loadDataSet(String fileName, DatasetGraph datasetGraph) {
+			return RiotLoader.load(fileName, Lang.NQUADS);
+		}
 	
 	protected Model loadModel(String fileName, Model model) {
 		try {
