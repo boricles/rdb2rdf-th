@@ -50,23 +50,28 @@ public class Comparator {
 	
 
 	public Comparator(String sourceFileName, String targetFileName, Lang lang) {
-		this.sourceFileName = sourceFileName;
-		this.targetFileName = targetFileName;
-		if ( lang == Lang.TURTLE) {		
-			sourceModel = loadModel(sourceFileName,sourceModel);
-			targetModel = loadModel(targetFileName,targetModel);
+		try {
+			this.sourceFileName = sourceFileName;
+			this.targetFileName = targetFileName;
+			if ( lang == Lang.TURTLE) {		
+				sourceModel = loadModel(sourceFileName,sourceModel);
+				targetModel = loadModel(targetFileName,targetModel);
+			}
+			else {
+				sourceDataSet = loadDataSet(sourceFileName,sourceDataSet);
+				targetDataSet = loadDataSet(targetFileName,targetDataSet);
+			}
 		}
-		else {
-			sourceDataSet = loadDataSet(sourceFileName,sourceDataSet);
-			targetDataSet = loadDataSet(targetFileName,targetDataSet);
+		catch (Exception ex) {
+			System.out.println("Error loading " + targetFileName + " in " + lang );
 		}
 	}
 
 	
 	
-		protected DatasetGraph loadDataSet(String fileName, DatasetGraph datasetGraph) {
+	protected DatasetGraph loadDataSet(String fileName, DatasetGraph datasetGraph) {
 			return RiotLoader.load(fileName, Lang.NQUADS);
-		}
+	}
 	
 	protected Model loadModel(String fileName, Model model) {
 		try {
@@ -85,16 +90,21 @@ public class Comparator {
 		catch (Exception ex) {
 			System.out.println("Error loading file " + fileName);
 			//ex.printStackTrace();
-			System.exit(0);
+			//System.exit(0);
 		}
 		return model;
 	}
 	
 	public boolean modelsAreEquivalent() {
+		if (sourceModel == null && targetModel == null)
+			return false;
 		return sourceModel.isIsomorphicWith(targetModel);
 	}
 	
 	public boolean datasetsAreEquivalent() {
+		
+		if (sourceDataSet == null || targetDataSet == null) 
+			return false;
 		Iterator<Node> iterSource = sourceDataSet.listGraphNodes();
 		Iterator<Node> iterTarget = targetDataSet.listGraphNodes();
 		

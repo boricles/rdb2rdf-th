@@ -218,9 +218,7 @@ public class RDB2RDFTC {
 				defaultOutputFileName = rdfNode.toString();
 				toolOutputFileName = getToolOutputFileName(defaultOutputFileName,toolName);
 
-				//Compare the content of the two files
 				Comparator comparator = new Comparator(currentDir + defaultOutputFileName, currentDir + toolOutputFileName,Lang.NQUADS);
-				
 				property = dcURI + "identifier";
 				iProperty = oModel.getOntProperty(property);
 				rdfNode = ind.getPropertyValue(iProperty);
