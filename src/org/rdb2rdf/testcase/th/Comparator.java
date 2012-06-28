@@ -111,7 +111,7 @@ public class Comparator {
 		if (sourceDataSet.isEmpty() != targetDataSet.isEmpty() )   //if one is empty and the other does not -> they are different
 			return false;
 		
-		if (sourceDataSet.isEmpty() && targetDataSet.isEmpty() ) { //load as models, because they don't have graphs
+		if (!iterSource.hasNext() && !iterTarget.hasNext() ) { //load as models, because they don't have graphs
 			sourceModel = loadModel(sourceFileName,sourceModel);
 			targetModel = loadModel(targetFileName,targetModel);
 			return modelsAreEquivalent();
