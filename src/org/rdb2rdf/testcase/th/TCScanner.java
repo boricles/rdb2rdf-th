@@ -199,7 +199,6 @@ public class TCScanner {
 			
 			//tcs.setVocabulary(cmd.getArgs()[1]);
 			
-			
 			tcs.scan();
 			
 			

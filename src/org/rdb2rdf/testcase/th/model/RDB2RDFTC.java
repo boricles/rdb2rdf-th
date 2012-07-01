@@ -286,6 +286,11 @@ public class RDB2RDFTC {
 				Property prop = oModel.getProperty(predicate);
 				RDFNode rdfNode = ind.getPropertyValue(prop);
 				
+				if (rdfNode == null) {
+					System.out.println("You should provide the DBMS information, e.g., <myProject> rdb2rdftest:dbms  r2rml:Oracle  " +
+									   "\nPlease check http://www.w3.org/2001/sw/rdb2rdf/wiki/Submitting_Test_Results");
+					System.exit(0);
+				}
 				if (rdfNode.isLiteral())
 					value = rdfNode.asLiteral().getString();
 				else
