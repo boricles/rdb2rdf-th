@@ -14,7 +14,9 @@
         a doap:Project ;
         doap:name "morph" ;
         doap:homepage <https://github.com/boricles/morph>  ;
-        rdb2rdftest:dbms  r2rml:Oracle ;
-        rdb2rdftest:implementsDirectMapping true ;
-        rdb2rdftest:implementsR2RML false .
+        doap:programming-language "Java"  ;
+        rdb2rdftest:contact "Boris Villazon-Terrazas" ;
+        rdb2rdftest:dbms  r2rml:HSQLDB ;
+        rdb2rdftest:implementsDirectMapping false ;
+        rdb2rdftest:implementsR2RML true .
          

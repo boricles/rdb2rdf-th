@@ -54,6 +54,7 @@ public class RDB2RDFTC {
 	protected static Resource softwareResource;
 	protected static Resource projectResouce;
 	protected static Resource dbmsResource;
+	protected static Resource homepageResource;
 	
 	protected static Resource earlPass;
 	protected static Resource earlFail;
@@ -306,7 +307,7 @@ public class RDB2RDFTC {
 		return value;
 	}
 	
-	protected Model checkEARLModel(Model earlModel, String toolName, String dbms, boolean implementsDM, boolean implementsR2RML) {
+	protected Model checkEARLModel(Model earlModel, String toolName, String dbms, String homepage, String programmingLanguage, String contact, boolean implementsDM, boolean implementsR2RML) {
 		if (earlModel==null) {
 			earlModel = ModelFactory.createDefaultModel();
 			
@@ -322,6 +323,14 @@ public class RDB2RDFTC {
 			Property doapName = earlModel.createProperty(doapURI + "name" );
 			myTool.addProperty(doapName, toolName);
 			
+			Property doapPLanguage = earlModel.createProperty(doapURI + "programming-language" );
+			myTool.addProperty(doapPLanguage, programmingLanguage);
+
+
+			Property rdb2rdftestContact = earlModel.createProperty(NS + "contact" );
+			myTool.addProperty(rdb2rdftestContact, contact);
+		
+			
 			Property implDM = earlModel.createProperty(NS + "implementsDirectMapping" );
 			//myTool.addProperty(implDM, new Boolean(implementsDM).toString());			
 			myTool.addLiteral(implDM,earlModel.createTypedLiteral(new Boolean(implementsDM).toString(),XSDDatatype.XSDboolean));
@@ -331,6 +340,12 @@ public class RDB2RDFTC {
 
 			myTH = earlModel.createResource(nsBase+"myTestHarness");
 			myTH.addProperty(RDF.type, softwareResource);
+			
+			Property doapHomePage = earlModel.createProperty(doapURI + "homepage");
+			
+			homepageResource = earlModel.createResource(homepage);
+			myTool.addProperty(doapHomePage, homepageResource);
+			
 						
 			dbmsResource = earlModel.createResource(dbms);
 			
@@ -339,7 +354,7 @@ public class RDB2RDFTC {
 		
 	}
 
-	public void processDescription(String dbPath, String toolName, String dbms, boolean implementsDM, boolean implementsR2RML) {
+	public void processDescription(String dbPath, String toolName, String dbms, String homepage, String programmingLanguage, String contact, boolean implementsDM, boolean implementsR2RML) {
 		try {
 			currentDir =  dbPath +"/";
 			// create an empty model	
@@ -356,8 +371,8 @@ public class RDB2RDFTC {
 	
 			oModel.add(model);
 			
-			earlModelDM = checkEARLModel(earlModelDM,toolName, dbms, implementsDM,  implementsR2RML);
-			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, dbms, implementsDM,  implementsR2RML);
+			earlModelDM = checkEARLModel(earlModelDM,toolName, dbms, homepage, programmingLanguage, contact, implementsDM,  implementsR2RML);
+			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, dbms, homepage, programmingLanguage, contact, implementsDM,  implementsR2RML);
 			
 			processTCs(toolName,implementsDM,implementsR2RML);
 			

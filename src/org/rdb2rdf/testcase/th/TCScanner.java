@@ -30,7 +30,13 @@ public class TCScanner {
 	
 	protected String toolName;
 	
+	protected String homepage;
+	
 	protected String dbms;
+	
+	protected String programmingLanguage;
+	
+	protected String contact;
 	
 	protected boolean implementsDM = false;
 	
@@ -84,7 +90,7 @@ public class TCScanner {
 	protected void processManifestFile(String dbPath, File manifestFile) {
 		RDB2RDFTC rdb2rdfTC = new RDB2RDFTC(vocabularyPath); 
 		rdb2rdfTC.setManifestFileName(manifestFile.getAbsolutePath());
-		rdb2rdfTC.processDescription(dbPath,toolName,dbms,implementsDM,implementsR2RML);
+		rdb2rdfTC.processDescription(dbPath,toolName,dbms,homepage,programmingLanguage,contact,implementsDM,implementsR2RML);
 	}
 	
 	protected void obtainBasicInfo() {
@@ -99,6 +105,13 @@ public class TCScanner {
 		this.implementsDM = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#implementsDirectMapping").equalsIgnoreCase("true");
 		
 		this.implementsR2RML = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#implementsR2RML").equalsIgnoreCase("true");
+		
+		this.homepage = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://usefulinc.com/ns/doap#homepage");
+
+		this.programmingLanguage = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://usefulinc.com/ns/doap#programming-language");
+
+		this.contact = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#contact");
+
 
 	}
 	
