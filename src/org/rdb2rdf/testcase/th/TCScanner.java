@@ -36,7 +36,11 @@ public class TCScanner {
 	
 	protected String programmingLanguage;
 	
-	protected String contact;
+	protected String developer;
+	
+	protected String developerName;
+	
+	protected String developerEmail;
 	
 	protected boolean implementsDM = false;
 	
@@ -90,7 +94,7 @@ public class TCScanner {
 	protected void processManifestFile(String dbPath, File manifestFile) {
 		RDB2RDFTC rdb2rdfTC = new RDB2RDFTC(vocabularyPath); 
 		rdb2rdfTC.setManifestFileName(manifestFile.getAbsolutePath());
-		rdb2rdfTC.processDescription(dbPath,toolName,dbms,homepage,programmingLanguage,contact,implementsDM,implementsR2RML);
+		rdb2rdfTC.processDescription(dbPath,toolName,dbms,homepage,programmingLanguage,developer,developerName,developerEmail,implementsDM,implementsR2RML);
 	}
 	
 	protected void obtainBasicInfo() {
@@ -110,7 +114,11 @@ public class TCScanner {
 
 		this.programmingLanguage = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://usefulinc.com/ns/doap#programming-language");
 
-		this.contact = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://purl.org/NET/rdb2rdf-test#contact");
+		this.developer = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://usefulinc.com/ns/doap#Project","http://usefulinc.com/ns/doap#developer");
+
+		this.developerName = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://xmlns.com/foaf/0.1/Person","http://xmlns.com/foaf/0.1/name");
+		
+		this.developerEmail = rdb2rdfTS.getPropertyValue(tsManifestFile,"http://xmlns.com/foaf/0.1/Person","http://xmlns.com/foaf/0.1/mbox");
 
 
 	}

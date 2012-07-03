@@ -56,6 +56,9 @@ public class RDB2RDFTC {
 	protected static Resource dbmsResource;
 	protected static Resource homepageResource;
 	
+	protected static Resource developerResource;
+	protected static Resource mboxResource;
+	
 	protected static Resource earlPass;
 	protected static Resource earlFail;
 		
@@ -299,7 +302,7 @@ public class RDB2RDFTC {
 			}
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			System.out.println("Error reading the file "+file +", class " + clazz + ", predicate "+ predicate);
 			System.exit(0);
 		}
@@ -307,7 +310,7 @@ public class RDB2RDFTC {
 		return value;
 	}
 	
-	protected Model checkEARLModel(Model earlModel, String toolName, String dbms, String homepage, String programmingLanguage, String contact, boolean implementsDM, boolean implementsR2RML) {
+	protected Model checkEARLModel(Model earlModel, String toolName, String dbms, String homepage, String programmingLanguage, String developer, String developerName, String developerEmail, boolean implementsDM, boolean implementsR2RML) {
 		if (earlModel==null) {
 			earlModel = ModelFactory.createDefaultModel();
 			
@@ -327,9 +330,20 @@ public class RDB2RDFTC {
 			myTool.addProperty(doapPLanguage, programmingLanguage);
 
 
-			Property rdb2rdftestContact = earlModel.createProperty(NS + "contact" );
-			myTool.addProperty(rdb2rdftestContact, contact);
-		
+			developerResource = earlModel.createResource(developer);
+			mboxResource = earlModel.createResource(developerEmail);
+			
+			Property doapDeveloper = earlModel.createProperty(NS + "developer" );
+			myTool.addProperty(doapDeveloper,developerResource);
+			
+			Property foafName = earlModel.createProperty("http://xmlns.com/foaf/0.1/name");
+			developerResource.addProperty(foafName, developerName);
+			
+			Property pmbox = earlModel.createProperty("http://xmlns.com/foaf/0.1/mbox");
+			mboxResource = earlModel.createProperty(developerEmail);
+			
+			developerResource.addProperty(pmbox, mboxResource);
+			
 			
 			Property implDM = earlModel.createProperty(NS + "implementsDirectMapping" );
 			//myTool.addProperty(implDM, new Boolean(implementsDM).toString());			
@@ -354,7 +368,7 @@ public class RDB2RDFTC {
 		
 	}
 
-	public void processDescription(String dbPath, String toolName, String dbms, String homepage, String programmingLanguage, String contact, boolean implementsDM, boolean implementsR2RML) {
+	public void processDescription(String dbPath, String toolName, String dbms, String homepage, String programmingLanguage, String developer, String developerName, String developerEmail, boolean implementsDM, boolean implementsR2RML) {
 		try {
 			currentDir =  dbPath +"/";
 			// create an empty model	
@@ -371,8 +385,8 @@ public class RDB2RDFTC {
 	
 			oModel.add(model);
 			
-			earlModelDM = checkEARLModel(earlModelDM,toolName, dbms, homepage, programmingLanguage, contact, implementsDM,  implementsR2RML);
-			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, dbms, homepage, programmingLanguage, contact, implementsDM,  implementsR2RML);
+			earlModelDM = checkEARLModel(earlModelDM,toolName, dbms, homepage, programmingLanguage, developer,developerName,developerEmail, implementsDM,  implementsR2RML);
+			earlModelR2RML = checkEARLModel(earlModelR2RML,toolName, dbms, homepage, programmingLanguage, developer,developerName,developerEmail, implementsDM,  implementsR2RML);
 			
 			processTCs(toolName,implementsDM,implementsR2RML);
 			
@@ -380,7 +394,7 @@ public class RDB2RDFTC {
 			
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			System.out.println("Error while processing the TS");
 			System.exit(0);
 		}
@@ -399,7 +413,7 @@ public class RDB2RDFTC {
 		}
 		catch(IOException e) {
 			  System.out.println("Exception caught"+e.getMessage());
-			  System.exit(0);
+			  //System.exit(0);
 		}
 	}
 	
