@@ -333,7 +333,7 @@ public class RDB2RDFTC {
 			developerResource = earlModel.createResource(developer);
 			mboxResource = earlModel.createResource(developerEmail);
 			
-			Property doapDeveloper = earlModel.createProperty(NS + "developer" );
+			Property doapDeveloper = earlModel.createProperty(doapURI + "developer" );
 			myTool.addProperty(doapDeveloper,developerResource);
 			
 			Property foafName = earlModel.createProperty("http://xmlns.com/foaf/0.1/name");

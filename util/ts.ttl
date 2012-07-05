@@ -3,6 +3,7 @@
 @prefix rdb2rdftest: <http://purl.org/NET/rdb2rdf-test#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix r2rml: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @base <http://mappingpedia.org/rdb2rdf/tc/> .
 
 <ts> a rdb2rdftest:TestSuite;
@@ -15,8 +16,13 @@
         doap:name "morph" ;
         doap:homepage <https://github.com/boricles/morph>  ;
         doap:programming-language "Java"  ;
-        rdb2rdftest:contact "Boris Villazon-Terrazas" ;
-        rdb2rdftest:dbms  r2rml:HSQLDB ;
+        doap:developer <http://boris.villazon.terrazas.name/me> ;        
+        rdb2rdftest:dbms r2rml:Oracle ;
         rdb2rdftest:implementsDirectMapping false ;
         rdb2rdftest:implementsR2RML true .
+        
+<http://boris.villazon.terrazas.name/me>
+		a foaf:Person ;
+		foaf:mbox <mailto:boris.villazon@terrazas.name> ;
+		foaf:name "Boris Villazon Terrazas" .
          
